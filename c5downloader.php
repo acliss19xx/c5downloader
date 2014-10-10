@@ -25,9 +25,14 @@ if(isset($_GET["step"])){
             break;
         case 2:
             //FIXME
-            exec("unzip ".FILENAME);
-            exec("mv ./".DIRNAME."/* ./");
-            exec("rm -Rf ./".DIRNAME);
+		$zip = new ZipArchive();
+		if($zip->open(FILENAME) === true) {
+			$zip->extractTo("./");
+			$zip->close();
+		}else {
+			exit('ファイルが見つかりません');
+		}
+		@unlink(FILENAME);
                   
             echo json_encode(1);
             break;
